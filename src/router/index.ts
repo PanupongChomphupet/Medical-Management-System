@@ -4,15 +4,17 @@ import type { RouteRecordRaw } from 'vue-router'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import LoginPage from '@/pages/auth/LoginPage.vue'
-import CalibrationPage from '@/pages/calibration/CalibrationPage.vue'
-import CertificatesPage from '@/pages/certificates/CertificatesPage.vue'
 import DashboardPage from '@/pages/dashboard/DashboardPage.vue'
-import DepartmentsPage from '@/pages/departments/DepartmentsPage.vue'
-import EquipmentPage from '@/pages/equipment/EquipmentPage.vue'
+import HospitalCertificatesTab from '@/pages/hospitals/tabs/HospitalCertificatesTab.vue'
+import HospitalDepartmentsTab from '@/pages/hospitals/tabs/HospitalDepartmentsTab.vue'
+import HospitalDetailPage from '@/pages/hospitals/HospitalDetailPage.vue'
+import HospitalEquipmentTab from '@/pages/hospitals/tabs/HospitalEquipmentTab.vue'
+import HospitalOverviewTab from '@/pages/hospitals/tabs/HospitalOverviewTab.vue'
+import HospitalReportsTab from '@/pages/hospitals/tabs/HospitalReportsTab.vue'
+import HospitalWorkOrdersTab from '@/pages/hospitals/tabs/HospitalWorkOrdersTab.vue'
 import HospitalsPage from '@/pages/hospitals/HospitalsPage.vue'
-import PreventiveMaintenancePage from '@/pages/preventive-maintenance/PreventiveMaintenancePage.vue'
+import SettingsPage from '@/pages/settings/SettingsPage.vue'
 import UsersPage from '@/pages/users/UsersPage.vue'
-import WorkOrdersPage from '@/pages/work-orders/WorkOrdersPage.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,7 +22,7 @@ const routes: RouteRecordRaw[] = [
     redirect: { name: 'dashboard' },
   },
   {
-    path: '/app',
+    path: '/',
     component: MainLayout,
     meta: { title: 'Application' },
     children: [
@@ -37,46 +39,66 @@ const routes: RouteRecordRaw[] = [
         meta: { title: 'Hospitals' },
       },
       {
-        path: 'departments',
-        name: 'departments',
-        component: DepartmentsPage,
-        meta: { title: 'Departments' },
-      },
-      {
-        path: 'equipment',
-        name: 'equipment',
-        component: EquipmentPage,
-        meta: { title: 'Equipment' },
-      },
-      {
-        path: 'work-orders',
-        name: 'work-orders',
-        component: WorkOrdersPage,
-        meta: { title: 'Work Orders' },
-      },
-      {
-        path: 'calibration',
-        name: 'calibration',
-        component: CalibrationPage,
-        meta: { title: 'Calibration' },
-      },
-      {
-        path: 'preventive-maintenance',
-        name: 'preventive-maintenance',
-        component: PreventiveMaintenancePage,
-        meta: { title: 'Preventive Maintenance' },
-      },
-      {
-        path: 'certificates',
-        name: 'certificates',
-        component: CertificatesPage,
-        meta: { title: 'Certificates' },
+        path: 'hospitals/:id',
+        component: HospitalDetailPage,
+        meta: { title: 'Hospital Detail' },
+        children: [
+          {
+            path: '',
+            redirect: (to) => ({
+              name: 'hospital-overview',
+              params: to.params,
+            }),
+          },
+          {
+            path: 'overview',
+            name: 'hospital-overview',
+            component: HospitalOverviewTab,
+            meta: { title: 'Overview' },
+          },
+          {
+            path: 'departments',
+            name: 'hospital-departments',
+            component: HospitalDepartmentsTab,
+            meta: { title: 'Departments' },
+          },
+          {
+            path: 'equipment',
+            name: 'hospital-equipment',
+            component: HospitalEquipmentTab,
+            meta: { title: 'Equipment' },
+          },
+          {
+            path: 'work-orders',
+            name: 'hospital-work-orders',
+            component: HospitalWorkOrdersTab,
+            meta: { title: 'Work Orders' },
+          },
+          {
+            path: 'reports',
+            name: 'hospital-reports',
+            component: HospitalReportsTab,
+            meta: { title: 'Reports' },
+          },
+          {
+            path: 'certificates',
+            name: 'hospital-certificates',
+            component: HospitalCertificatesTab,
+            meta: { title: 'Certificates' },
+          },
+        ],
       },
       {
         path: 'users',
         name: 'users',
         component: UsersPage,
         meta: { title: 'Users' },
+      },
+      {
+        path: 'settings',
+        name: 'settings',
+        component: SettingsPage,
+        meta: { title: 'Settings' },
       },
     ],
   },
