@@ -1,50 +1,57 @@
 export interface Hospital {
   id: string
-  name: string
-  code: string
-  province: string
+  hospitalNameTh: string
+  hospitalNameEn: string
+  abbreviation: string
+  address: string
+
   departments: number
   equipment: number
   workOrders: number
+
   status: 'Active' | 'Maintenance' | 'Inactive'
 }
 
 export const hospitals: Hospital[] = [
   {
-    id: 'bangkok-general',
-    name: 'Bangkok General Hospital',
-    code: 'BGH-001',
-    province: 'Bangkok',
+    id: '1',
+    hospitalNameTh: 'โรงพยาบาลบางกะปิ',
+    hospitalNameEn: 'BangKapi Hospital',
+    abbreviation: 'BKH',
+    address: 'BangKapi, Bangkok, Thailand',
     departments: 18,
     equipment: 284,
     workOrders: 23,
     status: 'Active',
   },
   {
-    id: 'chiangmai-medical-center',
-    name: 'Chiang Mai Medical Center',
-    code: 'CMC-014',
-    province: 'Chiang Mai',
+    id: '2',
+    hospitalNameTh: 'โรงพยาบาลชัยภูมิ',
+    hospitalNameEn: 'Chaiyaphum Hospital',
+    abbreviation: 'CYH',
+    address: 'Chaiyaphum, Bangkok, Thailand',
     departments: 12,
     equipment: 172,
     workOrders: 11,
     status: 'Active',
   },
   {
-    id: 'khon-kaen-regional',
-    name: 'Khon Kaen Regional Hospital',
-    code: 'KKR-022',
-    province: 'Khon Kaen',
+    id: '3',
+    hospitalNameTh: 'โรงพยาบาลเชียงใหม่',
+    hospitalNameEn: 'Chiang Mai Hospital',
+    abbreviation: 'CMH',
+    address: 'Chiang Mai, Thailand',
     departments: 15,
     equipment: 219,
     workOrders: 18,
     status: 'Maintenance',
   },
   {
-    id: 'songkhla-care',
-    name: 'Songkhla Care Hospital',
-    code: 'SCH-037',
-    province: 'Songkhla',
+    id: '4',
+    hospitalNameTh: 'โรงพยาบาลเชียงราย',
+    hospitalNameEn: 'Chiang Rai Hospital',
+    abbreviation: 'CRH',
+    address: 'Chiang Rai, Thailand',
     departments: 9,
     equipment: 136,
     workOrders: 7,
