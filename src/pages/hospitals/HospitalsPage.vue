@@ -96,7 +96,7 @@ const filteredHospitals = computed(() => {
   )
 })
 /* Edit Hospital */
-const edithospital = (hospital: Hospital) => {
+const editHospital = (hospital: Hospital) => {
   editHospitalId.value = hospital.id
 
   hospitalForm.hospitalNameTh = hospital.hospitalNameTh.trim()
@@ -104,6 +104,15 @@ const edithospital = (hospital: Hospital) => {
   hospitalForm.abbreviation = hospital.abbreviation.trim()
   hospitalForm.address = hospital.address.trim()
   openModal.value = true
+}
+/* Delete Hospital */
+const deleteHospital = (id: string) => {
+  if (!confirm('Are you sure you want to delete this hospital?')) return
+  const index = hospitals.value.findIndex((h) => h.id === id)
+
+  if (index === -1) return
+
+  hospitals.value.splice(index, 1)
 }
 /* stats cards */
 const statsCards = computed(() => [
@@ -205,11 +214,11 @@ const statsCards = computed(() => [
                     class="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-teal-600 hover:text-teal-700">
                     View
                   </RouterLink>
-                  <button type="button" @click="edithospital(hospital)"
+                  <button type="button" @click="editHospital(hospital)"
                     class="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-950">
                     Edit
                   </button>
-                  <button type="button"
+                  <button type="button" @click="deleteHospital(hospital.id)"
                     class="rounded-md border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:border-rose-400 hover:bg-rose-50">
                     Delete
                   </button>
@@ -218,7 +227,8 @@ const statsCards = computed(() => [
             </tr>
             <tr v-if="filteredHospitals.length === 0">
               <td colspan="7" class="px-5 py-10 text-center text-sm text-slate-500">
-                No hospitals match your search.
+                No hospitals found.<br />
+                Click "Add Hospital"
               </td>
             </tr>
           </tbody>
