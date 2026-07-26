@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, reactive } from 'vue'
-import { hospitals as hospitalData } from './hospitalData'
+import { hospitals as hospitalData, type Hospital } from './hospitalData'
 import BaseModal from '@/components/common/BaseModal.vue'
 import HospitalForm from '@/components/hospital/HospitalForm.vue'
 
 const searchTerm = ref('')
 const openModal = ref(false)
 const hospitals = ref([...hospitalData])
+const editHospitalId = ref<string | null>(null)
 
 /* hospital form */
 const hospitalForm = reactive({
@@ -30,6 +31,7 @@ const validateHospital = (): string | null => {
 
   const exists = hospitals.value.some(
     (hospital) =>
+      hospital.id !== editHospitalId.value &&
       hospital.abbreviation.trim().toLowerCase() ===
       abbreviation.toLowerCase(),
   )
@@ -45,18 +47,29 @@ const saveform = () => {
     alert(error)
     return
   }
-  hospitals.value.push({
-    id: crypto.randomUUID(),
-    hospitalNameTh: hospitalForm.hospitalNameTh,
-    hospitalNameEn: hospitalForm.hospitalNameEn,
-    abbreviation: hospitalForm.abbreviation,
-    address: hospitalForm.address,
-    departments: 0,
-    equipment: 0,
-    workOrders: 0,
-    status: 'Active',
-  })
-
+  if (editHospitalId.value) {
+    const hospital = hospitals.value.find(
+      h => h.id === editHospitalId.value,
+    )
+    if (!hospital) return
+    hospital.hospitalNameTh = hospitalForm.hospitalNameTh.trim()
+    hospital.hospitalNameEn = hospitalForm.hospitalNameEn.trim()
+    hospital.abbreviation = hospitalForm.abbreviation.trim()
+    hospital.address = hospitalForm.address.trim()
+  } else {
+    hospitals.value.push({
+      id: crypto.randomUUID(),
+      hospitalNameTh: hospitalForm.hospitalNameTh,
+      hospitalNameEn: hospitalForm.hospitalNameEn,
+      abbreviation: hospitalForm.abbreviation,
+      address: hospitalForm.address,
+      departments: 0,
+      equipment: 0,
+      workOrders: 0,
+      status: 'Active',
+    })
+  }
+  editHospitalId.value = null
   openModal.value = false
   resetForm()
 }
@@ -82,6 +95,16 @@ const filteredHospitals = computed(() => {
       .includes(keyword),
   )
 })
+/* Edit Hospital */
+const edithospital = (hospital: Hospital) => {
+  editHospitalId.value = hospital.id
+
+  hospitalForm.hospitalNameTh = hospital.hospitalNameTh.trim()
+  hospitalForm.hospitalNameEn = hospital.hospitalNameEn.trim()
+  hospitalForm.abbreviation = hospital.abbreviation.trim()
+  hospitalForm.address = hospital.address.trim()
+  openModal.value = true
+}
 /* stats cards */
 const statsCards = computed(() => [
   { label: 'Total Hospitals', value: String(hospitals.value.length) },
@@ -125,7 +148,7 @@ const statsCards = computed(() => [
             class="h-10 rounded-md bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800">
             Add Hospital
           </button>
-          <BaseModal v-model="openModal" title="Add Hospital">
+          <BaseModal v-model="openModal" :title="editHospitalId ? 'Edit Hospital' : 'Add Hospital'">
             <HospitalForm v-model="hospitalForm" />
             <template #footer>
               <button @click="openModal = false"
@@ -182,7 +205,7 @@ const statsCards = computed(() => [
                     class="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-teal-600 hover:text-teal-700">
                     View
                   </RouterLink>
-                  <button type="button"
+                  <button type="button" @click="edithospital(hospital)"
                     class="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-950">
                     Edit
                   </button>
