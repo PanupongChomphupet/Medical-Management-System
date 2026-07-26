@@ -15,8 +15,36 @@ const hospitalForm = reactive({
   abbreviation: '', // ตัวย่อ
   address: '',
 })
+/* validation hospital */
+const validateHospital = (): string | null => {
+  const hospitalNameTh = hospitalForm.hospitalNameTh.trim()
+  const abbreviation = hospitalForm.abbreviation.trim()
+
+  if (!hospitalNameTh) {
+    return 'กรุณากรอกชื่อโรงพยาบาล'
+  }
+
+  if (!abbreviation) {
+    return "กรุณากรอกชื่อย่อโรงพยาบาล"
+  }
+
+  const exists = hospitals.value.some(
+    (hospital) =>
+      hospital.abbreviation.trim().toLowerCase() ===
+      abbreviation.toLowerCase(),
+  )
+  if (exists) {
+    return "ชื่อย่อโรงพยาบาลซ้ํา"
+  }
+  return null
+}
 /* save form */
 const saveform = () => {
+  const error = validateHospital()
+  if (error) {
+    alert(error)
+    return
+  }
   hospitals.value.push({
     id: crypto.randomUUID(),
     hospitalNameTh: hospitalForm.hospitalNameTh,
@@ -28,9 +56,18 @@ const saveform = () => {
     workOrders: 0,
     status: 'Active',
   })
-  console.log(hospitals.value)
-}
 
+  openModal.value = false
+  resetForm()
+}
+/* reset form */
+const resetForm = () => {
+  hospitalForm.hospitalNameTh = ''
+  hospitalForm.hospitalNameEn = ''
+  hospitalForm.abbreviation = ''
+  hospitalForm.address = ''
+}
+/* filtered hospitals */
 const filteredHospitals = computed(() => {
   const keyword = searchTerm.value.trim().toLowerCase()
 
@@ -45,7 +82,7 @@ const filteredHospitals = computed(() => {
       .includes(keyword),
   )
 })
-
+/* stats cards */
 const statsCards = computed(() => [
   { label: 'Total Hospitals', value: String(hospitals.value.length) },
   {
@@ -89,7 +126,7 @@ const statsCards = computed(() => [
             Add Hospital
           </button>
           <BaseModal v-model="openModal" title="Add Hospital">
-            <HospitalForm v-model="hospitalForm"/>
+            <HospitalForm v-model="hospitalForm" />
             <template #footer>
               <button @click="openModal = false"
                 class="px-3 py-2 text-slate-500 transition bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-md hover:text-slate-600 ">
@@ -111,7 +148,7 @@ const statsCards = computed(() => [
               <th class="px-5 py-3">hospitalNameTh</th>
               <th class="px-5 py-3">HospitatNameEn</th>
               <th class="px-5 py-3">Abbreviation</th>
-              
+
               <th class="px-5 py-3">Departments</th>
               <th class="px-5 py-3">Equipment</th>
               <th class="px-5 py-3">Work Orders</th>

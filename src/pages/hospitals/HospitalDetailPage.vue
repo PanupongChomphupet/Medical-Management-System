@@ -11,9 +11,10 @@ const hospital = computed(
   () =>
     hospitals.find((hospitalItem) => hospitalItem.id === hospitalId.value) ?? {
       id: hospitalId.value,
-      name: 'Hospital',
-      code: 'UNKNOWN',
-      province: '-',
+      hospitalNameTh: 'Unknown Hospital',
+      hospitalNameEn: 'Unknown Hospital',
+      abbreviation: '-',
+      address: '-',
       departments: 0,
       equipment: 0,
       workOrders: 0,
@@ -42,9 +43,9 @@ const tabs = [
           >
             Back to Hospitals
           </RouterLink>
-          <h3 class="mt-3 text-2xl font-bold text-slate-950">{{ hospital.name }}</h3>
+          <h3 class="mt-3 text-2xl font-bold text-slate-950">{{ hospital.hospitalNameTh }}</h3>
           <p class="mt-1 text-sm text-slate-500">
-            {{ hospital.code }} · {{ hospital.province }}
+            {{ hospital.address }} · {{ hospital.abbreviation }}
           </p>
         </div>
 
