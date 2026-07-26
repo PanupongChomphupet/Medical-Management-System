@@ -227,7 +227,6 @@ const statsCards = computed(() => [
             </tr>
             <tr v-if="filteredHospitals.length === 0">
               <td colspan="7" class="px-5 py-10 text-center text-sm text-slate-500">
-                No hospitals found.<br />
                 Click "Add Hospital"
               </td>
             </tr>

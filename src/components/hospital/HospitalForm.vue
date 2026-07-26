@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
+import BaseInput from '../common/ฺBaseInput.vue';
+import BaseTextarea from '../common/BaseTextarea.vue';
 
 const model = defineModel<{
     hospitalNameTh: string,
@@ -13,38 +15,19 @@ const model = defineModel<{
 <template>
     <div class="grid gap-4">
         <div>
-            <label class="mb-1 block text-sm font-medium">
-                Hospital Name (TH)
-            </label>
-
-            <input v-model="model.hospitalNameTh" type="text"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none" />
+            <BaseInput title="Hospital Name (TH)" type="text" v-model="model.hospitalNameTh" />
         </div>
 
         <div>
-            <label class="mb-1 block text-sm font-medium">
-                Hospital Name (EN)
-            </label>
-
-            <input v-model="model.hospitalNameEn" type="text"
-                class="w-full rounded-lg border border-slate-300 outline-none px-3 py-2" />
+            <BaseInput title="Hospital Name (EN)" type="text" v-model="model.hospitalNameEn" />
         </div>
 
         <div>
-            <label class="mb-1 block text-sm font-medium">
-                Hospital Code
-            </label>
-
-            <input v-model="model.abbreviation" type="text"
-                class="w-full rounded-lg border border-slate-300 outline-none px-3 py-2" />
+            <BaseInput title="Hospital Code" type="text" v-model="model.abbreviation" />
         </div>
 
         <div>
-            <label class="mb-1 block text-sm font-medium">
-                Address
-            </label>
-            <textarea v-model="model.address" rows="3"
-                class="w-full rounded-lg border border-slate-300 outline-none px-3 py-2" />
+            <BaseTextarea title="Address" v-model="model.address" />
         </div>
     </div>
 </template>
