@@ -2,28 +2,41 @@
 import { reactive } from 'vue';
 import BaseInput from '../common/ฺBaseInput.vue';
 import BaseTextarea from '../common/BaseTextarea.vue';
+import BaseSelect from '../common/BaseSelect.vue';
+import type { HospitalForm } from '../../types/hospital';
 
-const model = defineModel<{
-    hospitalNameTh: string,
-    hospitalNameEn: string,
-    abbreviation: string,
-    address: string
-}>({ required: true })
+
+const props = defineProps<{
+    errors: {
+        hospitalNameTh: string,
+        hospitalNameEn: string,
+        abbreviation: string,
+        address: string,
+
+
+    }
+}>()
+const statusOptions = [
+    { label: 'Active', value: 'active' },
+    { label: 'Inactive', value: 'inactive' },
+]
+const model = defineModel<HospitalForm>({ required: true })
 
 </script>
 
 <template>
     <div class="grid gap-4">
         <div>
-            <BaseInput title="Hospital Name (TH)" type="text" v-model="model.hospitalNameTh" />
+            <BaseInput title="Hospital Name (TH)" v-model="model.hospitalNameTh" :error="props.errors.hospitalNameTh"
+                required />
         </div>
 
         <div>
-            <BaseInput title="Hospital Name (EN)" type="text" v-model="model.hospitalNameEn" />
+            <BaseInput title="Hospital Name (EN)" v-model="model.hospitalNameEn" />
         </div>
 
         <div>
-            <BaseInput title="Hospital Code" type="text" v-model="model.abbreviation" />
+            <BaseInput title="Hospital Code" v-model="model.abbreviation" :error="props.errors.abbreviation" />
         </div>
 
         <div>

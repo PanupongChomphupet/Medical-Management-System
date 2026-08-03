@@ -8,7 +8,6 @@ const searchTerm = ref('')
 const openModal = ref(false)
 const hospitals = ref([...hospitalData])
 const editHospitalId = ref<string | null>(null)
-
 /* hospital form */
 const hospitalForm = reactive({
   hospitalNameTh: '',
@@ -16,17 +15,69 @@ const hospitalForm = reactive({
   abbreviation: '', // ตัวย่อ
   address: '',
 })
+/* Error message */
+const errorMessage = reactive({
+  hospitalNameTh: '',
+  hospitalNameEn: '',
+  abbreviation: '',
+  address: '',
+})
+/* filtered hospitals */
+const filteredHospitals = computed(() => {
+  const keyword = searchTerm.value.trim().toLowerCase()
+
+  if (!keyword) {
+    return hospitals.value
+  }
+
+  return hospitals.value.filter((hospital) =>
+    [hospital.hospitalNameTh, hospital.hospitalNameEn, hospital.abbreviation, hospital.status]
+      .join(' ')
+      .toLowerCase()
+      .includes(keyword),
+  )
+})
+/* stats cards */
+const statsCards = computed(() => [
+  { label: 'Total Hospitals', value: String(hospitals.value.length) },
+  {
+    label: 'Active Hospitals',
+    value: String(hospitals.value.filter((hospital) => hospital.status === 'Active').length),
+  },
+  {
+    label: 'Total Equipment',
+    value: hospitals.value.reduce((total, hospital) => total + hospital.equipment, 0).toLocaleString(),
+  },
+  {
+    label: 'Open Work Orders',
+    value: hospitals.value.reduce((total, hospital) => total + hospital.workOrders, 0).toLocaleString(),
+  },
+])
+/* modal open and close */
+const openAddModal = () => {
+  resetForm()
+  resetErrors()
+  editHospitalId.value = null
+  openModal.value = true
+}
+const closeModal = () => {
+  openModal.value = false
+  resetForm()
+  resetErrors()
+  editHospitalId.value = null
+}
 /* validation hospital */
-const validateHospital = (): string | null => {
+const validateHospital = (): boolean => {
+  resetErrors()
   const hospitalNameTh = hospitalForm.hospitalNameTh.trim()
   const abbreviation = hospitalForm.abbreviation.trim()
 
   if (!hospitalNameTh) {
-    return 'กรุณากรอกชื่อโรงพยาบาล'
+    errorMessage.hospitalNameTh = "กรุณากรอกชื่อโรงพยาบาล (TH)"
   }
 
   if (!abbreviation) {
-    return "กรุณากรอกชื่อย่อโรงพยาบาล"
+    errorMessage.abbreviation = "กรุณากรอกชื่อย่อโรงพยาบาล"
   }
 
   const exists = hospitals.value.some(
@@ -36,15 +87,14 @@ const validateHospital = (): string | null => {
       abbreviation.toLowerCase(),
   )
   if (exists) {
-    return "ชื่อย่อโรงพยาบาลซ้ํา"
+    errorMessage.abbreviation = 'ชื่อย่อโรงพยาบาลซ้ํา'
   }
-  return null
+  return !Object.values(errorMessage).some((message) => message !== '')
 }
-/* save form */
+/* CRUD Hospital */
 const saveform = () => {
-  const error = validateHospital()
-  if (error) {
-    alert(error)
+  const isValid = validateHospital()
+  if (!isValid) {
     return
   }
   if (editHospitalId.value) {
@@ -73,29 +123,6 @@ const saveform = () => {
   openModal.value = false
   resetForm()
 }
-/* reset form */
-const resetForm = () => {
-  hospitalForm.hospitalNameTh = ''
-  hospitalForm.hospitalNameEn = ''
-  hospitalForm.abbreviation = ''
-  hospitalForm.address = ''
-}
-/* filtered hospitals */
-const filteredHospitals = computed(() => {
-  const keyword = searchTerm.value.trim().toLowerCase()
-
-  if (!keyword) {
-    return hospitals.value
-  }
-
-  return hospitals.value.filter((hospital) =>
-    [hospital.hospitalNameTh, hospital.hospitalNameEn, hospital.abbreviation, hospital.status]
-      .join(' ')
-      .toLowerCase()
-      .includes(keyword),
-  )
-})
-/* Edit Hospital */
 const editHospital = (hospital: Hospital) => {
   editHospitalId.value = hospital.id
 
@@ -105,7 +132,6 @@ const editHospital = (hospital: Hospital) => {
   hospitalForm.address = hospital.address.trim()
   openModal.value = true
 }
-/* Delete Hospital */
 const deleteHospital = (id: string) => {
   if (!confirm('Are you sure you want to delete this hospital?')) return
   const index = hospitals.value.findIndex((h) => h.id === id)
@@ -114,24 +140,20 @@ const deleteHospital = (id: string) => {
 
   hospitals.value.splice(index, 1)
 }
-/* stats cards */
-const statsCards = computed(() => [
-  { label: 'Total Hospitals', value: String(hospitals.value.length) },
-  {
-    label: 'Active Hospitals',
-    value: String(hospitals.value.filter((hospital) => hospital.status === 'Active').length),
-  },
-  {
-    label: 'Total Equipment',
-    value: hospitals.value.reduce((total, hospital) => total + hospital.equipment, 0).toLocaleString(),
-  },
-  {
-    label: 'Open Work Orders',
-    value: hospitals.value.reduce((total, hospital) => total + hospital.workOrders, 0).toLocaleString(),
-  },
-])
+/* reset form and resert errors */
+const resetForm = () => {
+  hospitalForm.hospitalNameTh = ''
+  hospitalForm.hospitalNameEn = ''
+  hospitalForm.abbreviation = ''
+  hospitalForm.address = ''
+}
+const resetErrors = () => {
+  errorMessage.hospitalNameTh = ''
+  errorMessage.hospitalNameEn = ''
+  errorMessage.abbreviation = ''
+  errorMessage.address = ''
+}
 </script>
-
 <template>
   <section class="space-y-6">
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -153,14 +175,14 @@ const statsCards = computed(() => [
           <label class="sr-only" for="hospital-search">Search hospital</label>
           <input id="hospital-search" v-model="searchTerm" type="search" placeholder="Search hospital"
             class="h-10 w-full rounded-md border border-slate-300 px-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 sm:w-72" />
-          <button type="button" @click="openModal = true"
+          <button type="button" @click="openAddModal"
             class="h-10 rounded-md bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800">
             Add Hospital
           </button>
           <BaseModal v-model="openModal" :title="editHospitalId ? 'Edit Hospital' : 'Add Hospital'">
-            <HospitalForm v-model="hospitalForm" />
+            <HospitalForm v-model="hospitalForm" :errors="errorMessage" />
             <template #footer>
-              <button @click="openModal = false"
+              <button @click="closeModal"
                 class="px-3 py-2 text-slate-500 transition bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-md hover:text-slate-600 ">
                 Cancel
               </button>
