@@ -3,7 +3,7 @@ import { reactive } from 'vue';
 import BaseInput from '../common/ฺBaseInput.vue';
 import BaseTextarea from '../common/BaseTextarea.vue';
 import BaseSelect from '../common/BaseSelect.vue';
-import type { HospitalForm } from '../../types/hospital';
+import type { HospitalForm } from '@/types/hospital.ts';
 
 
 const props = defineProps<{

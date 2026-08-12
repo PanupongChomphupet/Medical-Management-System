@@ -1,0 +1,48 @@
+import type { Hospital } from '../types/hospital'
+
+export const hospitalData: Hospital[] = [
+    {
+        id: '1',
+        hospitalNameTh: 'โรงพยาบาลบางกะปิ',
+        hospitalNameEn: 'BangKapi Hospital',
+        abbreviation: 'BKH',
+        address: 'BangKapi, Bangkok, Thailand',
+        departments: 18,
+        equipment: 284,
+        workOrders: 23,
+        status: 'Active',
+    },
+    {
+        id: '2',
+        hospitalNameTh: 'โรงพยาบาลชัยภูมิ',
+        hospitalNameEn: 'Chaiyaphum Hospital',
+        abbreviation: 'CYH',
+        address: 'Chaiyaphum, Bangkok, Thailand',
+        departments: 12,
+        equipment: 172,
+        workOrders: 11,
+        status: 'Active',
+    },
+    {
+        id: '3',
+        hospitalNameTh: 'โรงพยาบาลเชียงใหม่',
+        hospitalNameEn: 'Chiang Mai Hospital',
+        abbreviation: 'CMH',
+        address: 'Chiang Mai, Thailand',
+        departments: 15,
+        equipment: 219,
+        workOrders: 18,
+        status: 'Maintenance',
+    },
+    {
+        id: '4',
+        hospitalNameTh: 'โรงพยาบาลเชียงราย',
+        hospitalNameEn: 'Chiang Rai Hospital',
+        abbreviation: 'CRH',
+        address: 'Chiang Rai, Thailand',
+        departments: 9,
+        equipment: 136,
+        workOrders: 7,
+        status: 'Active',
+    },
+]

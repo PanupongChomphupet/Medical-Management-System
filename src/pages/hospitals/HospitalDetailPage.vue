@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { hospitals } from './hospitalData'
+import { hospitalData } from '@/mock/hospitalData'
 
 const route = useRoute()
 
@@ -9,7 +9,7 @@ const hospitalId = computed(() => String(route.params.id ?? ''))
 
 const hospital = computed(
   () =>
-    hospitals.find((hospitalItem) => hospitalItem.id === hospitalId.value) ?? {
+    hospitalData.find((hospitalItem) => hospitalItem.id === hospitalId.value) ?? {
       id: hospitalId.value,
       hospitalNameTh: 'Unknown Hospital',
       hospitalNameEn: 'Unknown Hospital',
