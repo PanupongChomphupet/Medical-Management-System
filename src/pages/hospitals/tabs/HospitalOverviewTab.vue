@@ -15,7 +15,7 @@ console.log(hospital.value)
 <template>
   <div class="grid gap-4 lg:grid-cols-3">
     <article class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
-      <h4 class="text-base font-semibold text-slate-950">Overview</h4>
+      <h4 class="text-base font-semibold text-slate-900">Overview</h4>
       <p class="mt-3 text-sm leading-6 text-slate-600">
         {{ hospital?.hospitalNameEn ?? 'This hospital' }} workspace groups operational modules under the hospital
         record so departments, equipment, work orders, reports, and certificates stay in one context.

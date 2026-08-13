@@ -10,7 +10,6 @@ const openModal = ref(false)
 const hospitals = ref([...hospitalData])
 const editHospitalId = ref<string | null>(null)
 
-console.log(hospitals.value)
 /* hospital form */
 
 const hospitalForm = reactive<HospitalForm>({
@@ -234,7 +233,7 @@ const resetErrors = () => {
           <tbody class="bg-white divide-y divide-slate-100">
             <tr v-for="hospital in filteredHospitals" :key="hospital.id" class="hover:bg-slate-50">
               <td class="px-5 py-4">
-                <p class="font-semibold text-slate-950">
+                <p class="font-semibold text-slate-900">
                   {{ hospital.hospitalNameTh }}
                 </p>
               </td>

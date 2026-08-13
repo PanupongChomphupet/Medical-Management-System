@@ -3,20 +3,20 @@ import type { Department } from '../types/department'
 export const departmentData: Department[] = [
     {
         id: '1',
-        departmentName: 'Department 1',
-        departmentCode: 'DPT1',
+        departmentName: 'ER',
+        departmentCode: 'แผนกอุบัติเหตุฉุกเฉิน',
         createdAt: '2023-01-01',
     },
     {
         id: '2',
-        departmentName: 'Department 2',
-        departmentCode: 'DPT2',
+        departmentName: 'OPD',
+        departmentCode: 'แผนกผู้ป่วยนอก',
         createdAt: '2023-01-01',
     },
     {
         id: '3',
-        departmentName: 'Department 3',
-        departmentCode: 'DPT3',
+        departmentName: 'TTM',
+        departmentCode: 'แผนกแพทย์แผนไทย',
         createdAt: '2023-01-01',
     },
 ]

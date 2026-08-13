@@ -12,8 +12,6 @@ const props = defineProps<{
         hospitalNameEn: string,
         abbreviation: string,
         address: string,
-
-
     }
 }>()
 const statusOptions = [
