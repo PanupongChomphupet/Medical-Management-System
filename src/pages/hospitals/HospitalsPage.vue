@@ -25,6 +25,20 @@ const errorMessage = reactive({
   abbreviation: '',
   address: '',
 })
+
+/* reset form and resert errors */
+const resetForm = () => {
+  hospitalForm.hospitalNameTh = ''
+  hospitalForm.hospitalNameEn = ''
+  hospitalForm.abbreviation = ''
+  hospitalForm.address = ''
+}
+const resetErrors = () => {
+  errorMessage.hospitalNameTh = ''
+  errorMessage.hospitalNameEn = ''
+  errorMessage.abbreviation = ''
+  errorMessage.address = ''
+}
 /* filtered hospitals */
 const filteredHospitals = computed(() => {
   const keyword = searchTerm.value.trim().toLowerCase()
@@ -143,19 +157,6 @@ const deleteHospital = (id: string) => {
 
   hospitals.value.splice(index, 1)
 }
-/* reset form and resert errors */
-const resetForm = () => {
-  hospitalForm.hospitalNameTh = ''
-  hospitalForm.hospitalNameEn = ''
-  hospitalForm.abbreviation = ''
-  hospitalForm.address = ''
-}
-const resetErrors = () => {
-  errorMessage.hospitalNameTh = ''
-  errorMessage.hospitalNameEn = ''
-  errorMessage.abbreviation = ''
-  errorMessage.address = ''
-}
 </script>
 <template>
   <div class="space-y-6">
@@ -260,10 +261,10 @@ const resetErrors = () => {
 
               <td class="px-5 py-4">
                 <span class="px-2 py-1 text-xs font-semibold rounded-md" :class="hospital.status === 'Active'
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : hospital.status === 'Maintenance'
-                      ? 'bg-amber-50 text-amber-700'
-                      : 'bg-slate-100 text-slate-600'
+                  ? 'bg-emerald-50 text-emerald-700'
+                  : hospital.status === 'Maintenance'
+                    ? 'bg-amber-50 text-amber-700'
+                    : 'bg-slate-100 text-slate-600'
                   ">
                   {{ hospital.status }}
                 </span>

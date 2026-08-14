@@ -4,3 +4,8 @@ export interface Department {
     departmentCode: string
     createdAt: string
 }
+
+export interface DepartmentForm {
+    departmentName: string
+    departmentCode: string
+}

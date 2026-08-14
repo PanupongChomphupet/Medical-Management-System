@@ -21,7 +21,6 @@ const statusOptions = [
 const model = defineModel<HospitalForm>({ required: true })
 
 </script>
-
 <template>
     <div class="grid gap-4">
         <div>
