@@ -1,19 +1,13 @@
-export interface Equipment {
-    id: string
-    department_id: string
-    equipmentType_id?: string
+export interface EquipmentFormType {
     assetNumber: string
-    equipmentCode: string
+    equipmentId : string
     equipmentName: string
     manufacturer: string
     model: string
     serialNumber: string
     workType: string
     riskLevel: string
-    createBy: string
+    registeredBy : string
     remark: string
     status: string
-    createdAt: string
-    updatedAt: string
-
 }
