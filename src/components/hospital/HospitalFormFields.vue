@@ -6,14 +6,7 @@ import BaseSelect from '../common/BaseSelect.vue';
 import type { HospitalForm } from '@/types/hospital.ts';
 
 
-const props = defineProps<{
-    errors: {
-        hospitalNameTh: string,
-        hospitalNameEn: string,
-        abbreviation: string,
-        address: string,
-    }
-}>()
+defineProps<{ errors: { hospitalNameTh: string, abbreviation: string } }>()
 const statusOptions = [
     { label: 'Active', value: 'active' },
     { label: 'Inactive', value: 'inactive' },
@@ -24,7 +17,7 @@ const model = defineModel<HospitalForm>({ required: true })
 <template>
     <div class="grid gap-4">
         <div>
-            <BaseInput title="Hospital Name (TH)" v-model="model.hospitalNameTh" :error="props.errors.hospitalNameTh"
+            <BaseInput title="Hospital Name (TH)" v-model="model.hospitalNameTh" :error="errors.hospitalNameTh"
                 required />
         </div>
 
@@ -33,11 +26,11 @@ const model = defineModel<HospitalForm>({ required: true })
         </div>
 
         <div>
-            <BaseInput title="Hospital Code" v-model="model.abbreviation" :error="props.errors.abbreviation" />
+            <BaseInput title="Hospital Code" v-model="model.abbreviation" :error="errors.abbreviation" />
         </div>
 
         <div>
             <BaseTextarea title="Address" v-model="model.address" />
         </div>
     </div>
-</template>
+</template> 

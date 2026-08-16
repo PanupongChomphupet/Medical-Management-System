@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { EquipmentFormType } from '@/types/equipment'
+import type { EquipmentForm } from '@/types/equipment'
 import BaseInput from '@/components/common/ฺBaseInput.vue'
 import BaseSelect from '@/components/common/BaseSelect.vue'
 import BaseTextarea from '@/components/common/BaseTextarea.vue'
 
 defineProps<{ errorMessage: { equipmentId: string; equipmentName: string } }>()
-const model = defineModel<EquipmentFormType>({ required: true })
+const model = defineModel<EquipmentForm>({ required: true })
 const workTypes = [{ label: 'Preventive Maintenance', value: 'Preventive Maintenance' }, { label: 'Calibration', value: 'Calibration' }, { label: 'Repair', value: 'Repair' }]
 const riskLevels = [{ label: 'Low', value: 'Low' }, { label: 'Medium', value: 'Medium' }, { label: 'High', value: 'High' }]
 const statuses = [{ label: 'Active', value: 'Active' }, { label: 'Maintenance', value: 'Maintenance' }, { label: 'Inactive', value: 'Inactive' }]
@@ -20,9 +20,12 @@ const statuses = [{ label: 'Active', value: 'Active' }, { label: 'Maintenance', 
     <BaseInput v-model="model.model" title="รุ่น" />
     <BaseInput v-model="model.serialNumber" title="หมายเลขซีเรียล" />
     <BaseSelect v-model="model.workType" title="ประเภทงาน" placeholder="เลือกประเภทงาน" :options="workTypes" />
-    <BaseSelect v-model="model.riskLevel" title="ระดับความเสี่ยง" placeholder="เลือกระดับความเสี่ยง" :options="riskLevels" />
+    <BaseSelect v-model="model.riskLevel" title="ระดับความเสี่ยง" placeholder="เลือกระดับความเสี่ยง"
+      :options="riskLevels" />
     <BaseInput v-model="model.registeredBy" title="ผู้ลงทะเบียน" />
     <BaseSelect v-model="model.status" title="สถานะ" :options="statuses" />
-    <div class="sm:col-span-2"><BaseTextarea v-model="model.remark" title="หมายเหตุ" /></div>
+    <div class="sm:col-span-2">
+      <BaseTextarea v-model="model.remark" title="หมายเหตุ" />
+    </div>
   </div>
 </template>

@@ -1,7 +1,8 @@
-import type { EquipmentFormType } from "@/types/equipment";
+import type { Equipment } from "@/types/equipment";
 
-export const equipmentData: EquipmentFormType[] = [
+export const equipmentData: Equipment[] = [
     {
+        id: "1",
         assetNumber: "6515-012-0001/1",
         equipmentId: "EKG-ER-01",
         equipmentName: "ECG render",
@@ -13,8 +14,11 @@ export const equipmentData: EquipmentFormType[] = [
         registeredBy: "PANUPONG CHOMPHUPET",
         remark: "Remark 1",
         status: "Active",
+        createdAt: "2022-01-01T00:00:00.000Z",
+        updatedAt: "2022-01-01T00:00:00.000Z",
     },
     {
+        id: "2",
         assetNumber: "6515-012-0002/1",
         equipmentId: "WEA-ER-01",
         equipmentName: "Weight Scale Adult Digital",
@@ -26,5 +30,7 @@ export const equipmentData: EquipmentFormType[] = [
         registeredBy: "THANAKRIT CHOMPHUPET",
         remark: "Remark 2",
         status: "Active",
+        createdAt: "2022-01-01T00:00:00.000Z",
+        updatedAt: "2022-01-01T00:00:00.000Z",
     },
 ];

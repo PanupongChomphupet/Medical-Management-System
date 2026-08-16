@@ -5,27 +5,19 @@ import type { Department, DepartmentForm } from '@/types/department'
 import BaseModal from '@/components/common/BaseModal.vue'
 import DepartmentFormFields from '@/components/hospital/DepartmentFormFields.vue'
 
-const departments = ref([...departmentData])
+const createEmptyForm = (): DepartmentForm => ({
+  departmentCode: '',
+  departmentName: '',
+})
+const departments = ref<Department[]>(departmentData.map((item) => ({ ...item })))
+const editDepartmentId = ref<string | null>(null)
 const searchTerm = ref('')
 const openModal = ref(false)
-const editDepartmentId = ref<string | null>(null)
-const nextId = Math.max(...departments.value.map((d) => Number(d.id))) + 1
+const departmentForm = reactive<DepartmentForm>(createEmptyForm())
 
-const departmentForm = reactive<DepartmentForm>({
-  departmentName: '',
-  departmentCode: '',
-})
-
-const errorMessage = reactive({
-  departmentName: '',
-})
-const resetForm = () => {
-  departmentForm.departmentName = ''
-  departmentForm.departmentCode = ''
-}
-const resetErrors = () => {
-  errorMessage.departmentName = ''
-}
+const errorMessage = reactive({ departmentName: '', })
+const resetForm = () => Object.assign(departmentForm, createEmptyForm())
+const resetErrors = () => { errorMessage.departmentName = '' }
 
 const filteredDepartments = computed(() => {
   const keyword = searchTerm.value.trim().toLowerCase()
@@ -53,32 +45,25 @@ const validateDepartment = () => {
 
 const saveform = () => {
   const isValid = validateDepartment()
-  if (!isValid) {
-    return
-  }
+  if (!isValid) return
+  const value = Object.fromEntries(Object.entries(departmentForm).map(([key, text]) => [key, text.trim()])) as unknown as Department
   if (editDepartmentId.value) {
-    const department = departments.value.find(
-      d => d.id === editDepartmentId.value,
-    )
-    if (!department) return
-    department.departmentName = departmentForm.departmentName.trim()
-    department.departmentCode = departmentForm.departmentCode.trim()
+    const index = departments.value.findIndex((item) => item.id === editDepartmentId.value)
+    if (index !== -1) departments.value[index] = value
   } else {
     departments.value.push({
-      id: nextId.toString(),
-      departmentName: departmentForm.departmentName,
-      departmentCode: departmentForm.departmentCode,
+      ...value,
+      id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     })
   }
-  editDepartmentId.value = null
-  openModal.value = false
+  closeModal()
 }
 
 const editDepartment = (department: Department) => {
   editDepartmentId.value = department.id
-  departmentForm.departmentName = department.departmentName.trim()
-  departmentForm.departmentCode = department.departmentCode.trim()
+  Object.assign(departmentForm, department)
   openModal.value = true
 }
 const deleteDepartment = (departmentId: string) => {
@@ -141,9 +126,9 @@ const deleteDepartment = (departmentId: string) => {
           </tr>
         </thead>
         <tbody>
-          <tr class="[&>td]:px-5 [&>td]:py-3 " v-for="department in filteredDepartments" :key="department.id">
+          <tr class="[&>td]:px-5 [&>td]:py-3 " v-for="(department, index) in filteredDepartments" :key="department.id">
             <td>
-              {{ department.id }}
+              {{ index + 1 }}
             </td>
             <td class="font-semibold text-slate-950">
               {{ department.departmentName }}

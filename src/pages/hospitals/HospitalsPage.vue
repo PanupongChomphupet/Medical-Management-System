@@ -4,49 +4,37 @@ import BaseModal from '@/components/common/BaseModal.vue'
 import { hospitalData } from '@/mock/hospitalData'
 import type { Hospital, HospitalForm } from '@/types/hospital'
 import HospitalFormFields from '@/components/hospital/HospitalFormFields.vue'
+import { equipmentData } from '@/mock/EquipmentData'
 
-const searchTerm = ref('')
-const openModal = ref(false)
-const hospitals = ref([...hospitalData])
-const editHospitalId = ref<string | null>(null)
-
-/* hospital form */
-
-const hospitalForm = reactive<HospitalForm>({
-  hospitalNameTh: '',
-  hospitalNameEn: '',
-  abbreviation: '', // ตัวย่อ
-  address: '',
-})
-/* Error message */
-const errorMessage = reactive({
+const createEmtyForm = (): HospitalForm => ({
   hospitalNameTh: '',
   hospitalNameEn: '',
   abbreviation: '',
   address: '',
+  createdAt: '',
+})
+
+const hospitals = ref<Hospital[]>(hospitalData.map((item) => ({ ...item })))
+const searchTerm = ref('')
+const openModal = ref(false)
+const editHospitalId = ref<string | null>(null)
+const hospitalForm = reactive<HospitalForm>(createEmtyForm())
+
+/* Error message */
+const errorMessage = reactive({
+  hospitalNameTh: '',
+  abbreviation: '',
 })
 
 /* reset form and resert errors */
-const resetForm = () => {
-  hospitalForm.hospitalNameTh = ''
-  hospitalForm.hospitalNameEn = ''
-  hospitalForm.abbreviation = ''
-  hospitalForm.address = ''
-}
-const resetErrors = () => {
-  errorMessage.hospitalNameTh = ''
-  errorMessage.hospitalNameEn = ''
-  errorMessage.abbreviation = ''
-  errorMessage.address = ''
-}
+const resetForm = () => Object.assign(hospitalForm, createEmtyForm())
+const resetErrors = () => Object.assign(errorMessage, { hospitalNameTh: '', abbreviation: '' })
 /* filtered hospitals */
 const filteredHospitals = computed(() => {
   const keyword = searchTerm.value.trim().toLowerCase()
-
   if (!keyword) {
     return hospitals.value
   }
-
   return hospitals.value.filter((hospital) =>
     [hospital.hospitalNameTh, hospital.hospitalNameEn, hospital.abbreviation, hospital.status]
       .join(' ')
@@ -63,11 +51,11 @@ const statsCards = computed(() => [
   },
   {
     label: 'Total Equipment',
-    value: hospitals.value.reduce((total, hospital) => total + hospital.equipment, 0).toLocaleString(),
+    value: hospitals.value.reduce((total, hospital) => total + equipmentData.length, 0).toLocaleString(),
   },
   {
     label: 'Open Work Orders',
-    value: hospitals.value.reduce((total, hospital) => total + hospital.workOrders, 0).toLocaleString(),
+    value: hospitals.value.reduce((total, hospital) => total + 0, 0).toLocaleString(),
   },
 ])
 /* modal open and close */
@@ -93,17 +81,10 @@ const validateHospital = (): boolean => {
     errorMessage.hospitalNameTh = "กรุณากรอกชื่อโรงพยาบาล (TH)"
   }
 
-  if (!abbreviation) {
-    errorMessage.abbreviation = "กรุณากรอกชื่อย่อโรงพยาบาล"
-  }
+  if (!abbreviation) errorMessage.abbreviation = "กรุณากรอกชื่อย่อโรงพยาบาล"
 
-  const exists = hospitals.value.some(
-    (hospital) =>
-      hospital.id !== editHospitalId.value &&
-      hospital.abbreviation.trim().toLowerCase() ===
-      abbreviation.toLowerCase(),
-  )
-  if (exists) {
+  else if (hospitals.value.some((hospital) => hospital.id !== editHospitalId.value &&
+    hospital.abbreviation.trim().toLowerCase() === abbreviation.toLowerCase(),)) {
     errorMessage.abbreviation = 'ชื่อย่อโรงพยาบาลซ้ํา'
   }
   return !Object.values(errorMessage).some((message) => message !== '')
@@ -111,29 +92,17 @@ const validateHospital = (): boolean => {
 /* CRUD Hospital */
 const saveform = () => {
   const isValid = validateHospital()
-  if (!isValid) {
-    return
-  }
+  if (!isValid) return
+  const value = Object.fromEntries(Object.entries(hospitalForm).map(([key, text]) => [key, text.trim()])) as unknown as Hospital
   if (editHospitalId.value) {
-    const hospital = hospitals.value.find(
-      h => h.id === editHospitalId.value,
-    )
-    if (!hospital) return
-    hospital.hospitalNameTh = hospitalForm.hospitalNameTh.trim()
-    hospital.hospitalNameEn = hospitalForm.hospitalNameEn.trim()
-    hospital.abbreviation = hospitalForm.abbreviation.trim()
-    hospital.address = hospitalForm.address.trim()
+    const index = hospitals.value.findIndex((item) => item.id === editHospitalId.value)
+    if (index !== -1) hospitals.value[index] = value
   } else {
     hospitals.value.push({
+      ...value,
       id: crypto.randomUUID(),
-      hospitalNameTh: hospitalForm.hospitalNameTh,
-      hospitalNameEn: hospitalForm.hospitalNameEn,
-      abbreviation: hospitalForm.abbreviation,
-      address: hospitalForm.address,
-      departments: 0,
-      equipment: 0,
-      workOrders: 0,
-      status: 'Active',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     })
   }
   editHospitalId.value = null
@@ -142,11 +111,7 @@ const saveform = () => {
 }
 const editHospital = (hospital: Hospital) => {
   editHospitalId.value = hospital.id
-
-  hospitalForm.hospitalNameTh = hospital.hospitalNameTh.trim()
-  hospitalForm.hospitalNameEn = hospital.hospitalNameEn.trim()
-  hospitalForm.abbreviation = hospital.abbreviation.trim()
-  hospitalForm.address = hospital.address.trim()
+  Object.assign(hospitalForm, hospital)
   openModal.value = true
 }
 const deleteHospital = (id: string) => {
@@ -223,9 +188,6 @@ const deleteHospital = (id: string) => {
               <th class="px-5 py-3">hospitalNameTh</th>
               <th class="px-5 py-3">HospitatNameEn</th>
               <th class="px-5 py-3">Abbreviation</th>
-              <th class="px-5 py-3">Departments</th>
-              <th class="px-5 py-3">Equipment</th>
-              <th class="px-5 py-3">Work Orders</th>
               <th class="px-5 py-3">Status</th>
               <th class="px-5 py-3 text-right">Actions</th>
             </tr>
@@ -246,19 +208,6 @@ const deleteHospital = (id: string) => {
               <td class="px-5 py-4 text-slate-600">
                 {{ hospital.address }}
               </td>
-
-              <td class="px-5 py-4 text-slate-600">
-                {{ hospital.departments }}
-              </td>
-
-              <td class="px-5 py-4 text-slate-600">
-                {{ hospital.equipment }}
-              </td>
-
-              <td class="px-5 py-4 text-slate-600">
-                {{ hospital.workOrders }}
-              </td>
-
               <td class="px-5 py-4">
                 <span class="px-2 py-1 text-xs font-semibold rounded-md" :class="hospital.status === 'Active'
                   ? 'bg-emerald-50 text-emerald-700'

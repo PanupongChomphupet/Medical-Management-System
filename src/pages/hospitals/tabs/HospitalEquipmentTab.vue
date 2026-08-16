@@ -3,15 +3,30 @@ import { computed, reactive, ref } from 'vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import EquipmentFormFields from '@/components/hospital/EquipmentFormFields.vue'
 import { equipmentData } from '@/mock/EquipmentData'
-import type { EquipmentFormType } from '@/types/equipment'
+import type { Equipment, EquipmentForm } from '@/types/equipment'
 
-const emptyForm = (): EquipmentFormType => ({ assetNumber: '', equipmentId: '', equipmentName: '', manufacturer: '', model: '', serialNumber: '', workType: '', riskLevel: '', registeredBy: '', remark: '', status: 'Active' })
-const equipments = ref<EquipmentFormType[]>(equipmentData.map((item) => ({ ...item })))
+const createEmptyForm = (): EquipmentForm => ({
+  assetNumber: '',
+  equipmentId: '',
+  equipmentName: '',
+  manufacturer: '',
+  model: '',
+  serialNumber: '',
+  workType: '',
+  riskLevel: '',
+  registeredBy: '',
+  remark: '',
+  status: 'Active'
+})
+const equipments = ref<Equipment[]>(equipmentData.map((item) => ({ ...item })))
 const searchTerm = ref('')
 const openModal = ref(false)
 const editingId = ref<string | null>(null)
-const equipmentForm = reactive<EquipmentFormType>(emptyForm())
-const errorMessage = reactive({ equipmentId: '', equipmentName: '' })
+const equipmentForm = reactive<EquipmentForm>(createEmptyForm())
+const errorMessage = reactive({
+  equipmentId: '',
+  equipmentName: ''
+})
 
 const filteredEquipments = computed(() => {
   const keyword = searchTerm.value.trim().toLowerCase()
@@ -21,8 +36,7 @@ const filteredEquipments = computed(() => {
       .some((value) => value.toLowerCase().includes(keyword)),
   )
 })
-
-const resetForm = () => Object.assign(equipmentForm, emptyForm())
+const resetForm = () => Object.assign(equipmentForm, createEmptyForm())
 const resetErrors = () => Object.assign(errorMessage, { equipmentId: '', equipmentName: '' })
 const openAddModal = () => {
   editingId.value = null
@@ -40,7 +54,7 @@ const validateForm = () => {
   resetErrors()
   const id = equipmentForm.equipmentId.trim()
   if (!id) errorMessage.equipmentId = 'กรุณากรอกรหัสเครื่องมือ'
-  else if (equipments.value.some((item) => item.equipmentId.toLowerCase() === id.toLowerCase() && item.equipmentId !== editingId.value)) {
+  else if (equipments.value.some((item) => item.equipmentId.toLowerCase() === id.toLowerCase() && item.id !== editingId.value)) {
     errorMessage.equipmentId = 'รหัสเครื่องมือนี้มีอยู่แล้ว'
   }
   if (!equipmentForm.equipmentName.trim()) errorMessage.equipmentName = 'กรุณากรอกชื่อเครื่องมือ'
@@ -48,15 +62,22 @@ const validateForm = () => {
 }
 const saveForm = () => {
   if (!validateForm()) return
-  const value = Object.fromEntries(Object.entries(equipmentForm).map(([key, text]) => [key, text.trim()])) as unknown as EquipmentFormType
+  const value = Object.fromEntries(Object.entries(equipmentForm).map(([key, text]) => [key, text.trim()])) as unknown as Equipment
   if (editingId.value) {
     const index = equipments.value.findIndex((item) => item.equipmentId === editingId.value)
     if (index !== -1) equipments.value[index] = value
-  } else equipments.value.push(value)
+  } else {
+    equipments.value.push({
+      ...value,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    })
+  }
   closeModal()
 }
-const editEquipment = (equipment: EquipmentFormType) => {
-  editingId.value = equipment.equipmentId
+const editEquipment = (equipment: Equipment) => {
+  editingId.value = equipment.id
   Object.assign(equipmentForm, equipment)
   resetErrors()
   openModal.value = true
