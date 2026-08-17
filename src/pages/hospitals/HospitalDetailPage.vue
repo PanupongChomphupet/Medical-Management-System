@@ -26,7 +26,6 @@ const tabs = [
   { label: 'Overview', routeName: 'hospital-overview' },
   { label: 'Departments', routeName: 'hospital-departments' },
   { label: 'Equipment', routeName: 'hospital-equipment' },
-  { label: 'Work Orders', routeName: 'hospital-work-orders' },
   { label: 'Reports', routeName: 'hospital-reports' },
   { label: 'Certificates', routeName: 'hospital-certificates' },
 ]
@@ -52,15 +51,15 @@ const tabs = [
         <div class="grid grid-cols-3 gap-3 text-center">
           <div class="rounded-md border border-slate-200 px-4 py-3">
             <p class="text-xs font-medium text-slate-500">Departments</p>
-            <p class="mt-1 text-lg font-bold text-slate-950">{{ hospital.departments }}</p>
+            <!-- <p class="mt-1 text-lg font-bold text-slate-950">{{ hospital.departments }}</p> -->
           </div>
           <div class="rounded-md border border-slate-200 px-4 py-3">
             <p class="text-xs font-medium text-slate-500">Equipment</p>
-            <p class="mt-1 text-lg font-bold text-slate-950">{{ hospital.equipment }}</p>
+            <!-- <p class="mt-1 text-lg font-bold text-slate-950">{{ hospital.equipment }}</p> -->
           </div>
           <div class="rounded-md border border-slate-200 px-4 py-3">
             <p class="text-xs font-medium text-slate-500">Work Orders</p>
-            <p class="mt-1 text-lg font-bold text-slate-950">{{ hospital.workOrders }}</p>
+            <!-- <p class="mt-1 text-lg font-bold text-slate-950">{{ hospital.workOrders }}</p> -->
           </div>
         </div>
       </div>

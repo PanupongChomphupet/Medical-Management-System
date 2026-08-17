@@ -11,10 +11,10 @@ import HospitalDetailPage from '@/pages/hospitals/HospitalDetailPage.vue'
 import HospitalEquipmentTab from '@/pages/hospitals/tabs/HospitalEquipmentTab.vue'
 import HospitalOverviewTab from '@/pages/hospitals/tabs/HospitalOverviewTab.vue'
 import HospitalReportsTab from '@/pages/hospitals/tabs/HospitalReportsTab.vue'
-import HospitalWorkOrdersTab from '@/pages/hospitals/tabs/HospitalWorkOrdersTab.vue'
 import HospitalsPage from '@/pages/hospitals/HospitalsPage.vue'
 import SettingsPage from '@/pages/settings/SettingsPage.vue'
 import UsersPage from '@/pages/users/UsersPage.vue'
+import WorkOrder from '@/pages/workorder/WorkOrder.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -69,12 +69,6 @@ const routes: RouteRecordRaw[] = [
             meta: { title: 'Equipment' },
           },
           {
-            path: 'work-orders',
-            name: 'hospital-work-orders',
-            component: HospitalWorkOrdersTab,
-            meta: { title: 'Work Orders' },
-          },
-          {
             path: 'reports',
             name: 'hospital-reports',
             component: HospitalReportsTab,
@@ -93,6 +87,12 @@ const routes: RouteRecordRaw[] = [
         name: 'users',
         component: UsersPage,
         meta: { title: 'Users' },
+      },
+      {
+        path: 'workorder',
+        name: 'workorder',
+        component: WorkOrder,
+        meta: { title: 'Work Order' },
       },
       {
         path: 'settings',

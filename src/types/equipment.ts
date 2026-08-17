@@ -6,6 +6,7 @@ export interface Equipment {
     manufacturer: string
     model: string
     serialNumber: string
+    department: string
     workType: string
     riskLevel: string
     registeredBy : string
@@ -21,6 +22,7 @@ export interface EquipmentForm {
     manufacturer: string
     model: string
     serialNumber: string
+    department: string
     workType: string
     riskLevel: string
     registeredBy : string
