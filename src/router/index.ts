@@ -14,7 +14,7 @@ import HospitalReportsTab from '@/pages/hospitals/tabs/HospitalReportsTab.vue'
 import HospitalsPage from '@/pages/hospitals/HospitalsPage.vue'
 import SettingsPage from '@/pages/settings/SettingsPage.vue'
 import UsersPage from '@/pages/users/UsersPage.vue'
-import WorkOrder from '@/pages/workorder/WorkOrder.vue'
+import WorkOrderPage from '@/pages/workorder/WorkOrderPage.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -91,7 +91,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'workorder',
         name: 'workorder',
-        component: WorkOrder,
+        component: WorkOrderPage,
         meta: { title: 'Work Order' },
       },
       {

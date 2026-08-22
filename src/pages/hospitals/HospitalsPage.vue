@@ -109,9 +109,10 @@ const saveform = () => {
   openModal.value = false
   resetForm()
 }
-const editHospital = (hospital: Hospital) => {
-  editHospitalId.value = hospital.id
-  Object.assign(hospitalForm, hospital)
+
+const editHospital = (item: Hospital) => {
+  editHospitalId.value = item.id
+  Object.assign(hospitalForm, item)
   openModal.value = true
 }
 const deleteHospital = (id: string) => {
