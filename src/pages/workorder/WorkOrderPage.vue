@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 import BaseModal from '@/components/common/BaseModal.vue'
 import WorkOrderFormFields from '@/components/workorder/WorkorderFormFields.vue'
 import { hospitalData } from '@/mock/hospitalData'
@@ -268,14 +269,18 @@ const deleteWorkOrder = (id: string) => {
             <td class="font-semibold text-slate-950">{{ item.workOrderId }}</td>
             <td>{{ hospitalName(item.hospitalId) }}</td>
             <td class="whitespace-nowrap">{{ formatDate(item.startDate) }} – {{ formatDate(item.endDate) }}</td>
-            <td>{{ item.staffIds.length}}</td>
+            <td>{{ item.staffIds.length }}</td>
             <td><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold"
                 :class="statusClass(item.status)">{{ item.status }}</span></td>
             <td>
               <div class="flex gap-2">
-                <button type="button"
-                  class="rounded-md border border-teal-200 px-3 py-1.5 text-xs font-semibold text-teal-700 hover:bg-teal-50"
-                  @click="viewWorkOrder(item)">View</button>
+                <RouterLink :to="{
+                  name: 'workorder-detail',
+                  params: { id: item.id }
+                }"
+                  class="px-3 py-1.5 text-xs font-semibold text-slate-700 border border-slate-200 rounded-md transition hover:border-teal-600 hover:text-teal-700">
+                  View
+                </RouterLink>
                 <button type="button"
                   class="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-slate-400"
                   @click="editWorkOrder(item)">Edit</button>
@@ -322,7 +327,8 @@ const deleteWorkOrder = (id: string) => {
         </div>
       </dl>
       <template #footer>
-        <button type="button" class="rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800" @click="viewModalOpen = false">Close</button>
+        <button type="button" class="rounded-md bg-teal-700 px-4 py-2 font-semibold text-white hover:bg-teal-800"
+          @click="viewModalOpen = false">Close</button>
       </template>
     </BaseModal>
   </section>

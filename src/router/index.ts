@@ -15,6 +15,7 @@ import HospitalsPage from '@/pages/hospitals/HospitalsPage.vue'
 import SettingsPage from '@/pages/settings/SettingsPage.vue'
 import UsersPage from '@/pages/users/UsersPage.vue'
 import WorkOrderPage from '@/pages/workorder/WorkOrderPage.vue'
+import WorkOrderDetailPage from '@/pages/workorder/WorkOrderDetailPage.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -93,6 +94,12 @@ const routes: RouteRecordRaw[] = [
         name: 'workorder',
         component: WorkOrderPage,
         meta: { title: 'Work Order' },
+      },
+      {
+        path: 'workorder/:id',
+        name: 'workorder-detail',
+        component: WorkOrderDetailPage,
+        meta: { title: 'Workorder Detail' },
       },
       {
         path: 'settings',
