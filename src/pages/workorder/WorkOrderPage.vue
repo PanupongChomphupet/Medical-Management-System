@@ -229,7 +229,7 @@ const deleteWorkOrder = (id: string) => {
 </script>
 
 <template>
-  <section class="bg-white border border-slate-200 rounded-lg shadow-sm">
+  <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
     <header class="flex flex-col gap-4 p-5 border-b border-slate-200 lg:flex-row lg:items-center lg:justify-between">
       <div>
         <h1 class="text-lg font-semibold text-slate-950">Work Orders</h1>
@@ -331,5 +331,5 @@ const deleteWorkOrder = (id: string) => {
           @click="viewModalOpen = false">Close</button>
       </template>
     </BaseModal>
-  </section>
+  </div>
 </template>
