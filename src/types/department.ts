@@ -1,5 +1,6 @@
 export interface Department {
     id: string
+    hospitalId: string
     departmentCode: string
     departmentName: string
     createdAt: string

@@ -19,3 +19,11 @@ export interface WorkOrderForm {
     status: 'Pending' | 'In Progress' | 'Completed'
     remark: string
 }
+
+export interface WorkOrderEquipmentType {
+    id: string
+    workOrderId: string
+    equipmentId: string
+    jobType: 'CAL' | 'PM' | 'CAL/PM'
+    status: 'Pending' | 'In Progress' | 'Completed'
+}
