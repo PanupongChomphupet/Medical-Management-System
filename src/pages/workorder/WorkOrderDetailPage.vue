@@ -54,7 +54,6 @@ const filteredEquipments = computed(() => {
         && (!filters.status || item.status === filters.status),
     )
 })
-
 const statusClass = (status: JobStatus) => ({ Pending: 'bg-amber-100 text-amber-700', 'In Progress': 'bg-blue-100 text-blue-700', Completed: 'bg-emerald-100 text-emerald-700' }[status])
 const clearFilters = () => Object.assign(filters, { department: '', jobType: '', status: '' })
 const openAddModal = () => {
@@ -79,6 +78,7 @@ const addEquipment = () => {
     workOrderEquipments.value.push(createRelation(equipment))
     closeAddModal()
 }
+const removeEquipment = (id: string) => workOrderEquipments.value = workOrderEquipments.value.filter((item) => item.id !== id)
 </script>
 
 <template>
@@ -87,6 +87,10 @@ const addEquipment = () => {
             <div
                 class="flex flex-col gap-3 border-b border-slate-200 p-5 lg:flex-row lg:items-start lg:justify-between">
                 <div>
+                    <RouterLink :to="{ name: 'workorder' }"
+                        class="my-2 text-sm font-semibold text-teal-600 transition hover:text-teal-900">
+                        Black to WorkOrder
+                    </RouterLink>
                     <h1 class="text-xl font-semibold text-slate-950">{{ workOrderData?.workOrderId ??
                         'Work Order notfound' }}</h1>
                     <h2 class="mt-3 text-lg font-semibold text-slate-900">{{ hospitalName }}</h2>
@@ -138,7 +142,7 @@ const addEquipment = () => {
                         class="h-10 rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                         :class="showFilters ? 'border-teal-600 bg-teal-50 text-teal-700' : ''"
                         @click="showFilters = !showFilters">Filter<span v-if="activeFilterCount"> ({{ activeFilterCount
-                        }})</span></button><button type="button"
+                            }})</span></button><button type="button"
                         class="h-10 whitespace-nowrap rounded-md bg-teal-700 px-4 text-sm font-semibold text-white hover:bg-teal-800"
                         @click="openAddModal">Add Equipment</button></div>
             </header>
@@ -173,6 +177,7 @@ const addEquipment = () => {
                             <th>Department</th>
                             <th>Job Type</th>
                             <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -184,6 +189,11 @@ const addEquipment = () => {
                             <td>{{ item.jobType }}</td>
                             <td><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold"
                                     :class="statusClass(item.status)">{{ item.status }}</span></td>
+                            <td>
+                                <button type="button"
+                                    class="rounded-md border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50"
+                                    @click="removeEquipment(item.id)">Delete</button>
+                            </td>
                         </tr>
                         <tr v-if="filteredEquipments.length === 0">
                             <td colspan="5" class="px-5 py-12 text-center text-slate-500">ไม่พบข้อมูลเครื่องมือ</td>
@@ -211,7 +221,7 @@ const addEquipment = () => {
                         <option v-for="equipment in availableEquipments" :key="equipment.id" :value="equipment.id">{{
                             equipment.equipmentId }} — {{ equipment.equipmentName }}</option>
                     </select><span v-if="addError" class="mt-1 block text-sm text-rose-500">{{ addError
-                    }}</span></label>
+                        }}</span></label>
                 <p v-else class="rounded-md bg-teal-50 p-3 text-sm text-teal-700">
                     จะเพิ่มเครื่องมือที่ยังไม่อยู่ในรอบงานนี้จำนวน {{ availableEquipments.length }} เครื่อง</p>
                 <label class="text-sm font-medium">Job Type<select v-model="addForm.jobType"

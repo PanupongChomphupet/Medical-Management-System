@@ -8,8 +8,6 @@ const route = useRoute()
 const hospital = computed(() =>
   hospitalData.find((hospitalItem) => hospitalItem.id === String(route.params.id)),
 )
-
-console.log(hospital.value)
 </script>
 
 <template>
