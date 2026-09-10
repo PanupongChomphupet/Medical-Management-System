@@ -20,7 +20,7 @@ export interface WorkOrderForm {
     remark: string
 }
 
-export interface WorkOrderEquipmentType {
+export interface WorkOrderEquipment {
     id: string
     workOrderId: string
     equipmentId: string

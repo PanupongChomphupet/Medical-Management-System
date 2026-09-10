@@ -1,6 +1,6 @@
 import type { WorkOrder } from "@/types/workorder";
 
-export const workOrder: WorkOrder[] = [
+export const workOrderData: WorkOrder[] = [
     {
         id: '1',
         workOrderId: 'WO-2026-001',

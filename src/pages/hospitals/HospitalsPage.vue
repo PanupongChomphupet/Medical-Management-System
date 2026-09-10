@@ -9,9 +9,13 @@ import { equipmentData } from '@/mock/EquipmentData'
 const createEmtyForm = (): HospitalForm => ({
   hospitalNameTh: '',
   hospitalNameEn: '',
-  abbreviation: '',
+  initial: '',
   address: '',
-  createdAt: '',
+  subdistrict: '',
+  district: '',
+  province: '',
+  postalCode: '',
+  status: 'Active',
 })
 
 const hospitals = ref<Hospital[]>(hospitalData.map((item) => ({ ...item })))
@@ -36,12 +40,19 @@ const filteredHospitals = computed(() => {
     return hospitals.value
   }
   return hospitals.value.filter((hospital) =>
-    [hospital.hospitalNameTh, hospital.hospitalNameEn, hospital.abbreviation, hospital.status]
-      .join(' ')
-      .toLowerCase()
-      .includes(keyword),
+    [hospital.hospitalNameTh, hospital.hospitalNameEn, hospital.status, hospital.province]
+      .some((value) => value.toLowerCase().includes(keyword))
   )
 })
+const formatAddress = (hospital: HospitalForm) => {
+  return [
+    hospital.address,
+    hospital.subdistrict && `ต.${hospital.subdistrict}`,
+    hospital.district && `อ.${hospital.district}`,
+    hospital.province && `จ.${hospital.province}`,
+    hospital.postalCode
+  ].filter(Boolean).join(' ')
+}
 /* stats cards */
 const statsCards = computed(() => [
   { label: 'Total Hospitals', value: String(hospitals.value.length) },
@@ -75,7 +86,7 @@ const closeModal = () => {
 const validateHospital = (): boolean => {
   resetErrors()
   const hospitalNameTh = hospitalForm.hospitalNameTh.trim()
-  const abbreviation = hospitalForm.abbreviation.trim()
+  const abbreviation = hospitalForm.initial.trim()
 
   if (!hospitalNameTh) {
     errorMessage.hospitalNameTh = "กรุณากรอกชื่อโรงพยาบาล (TH)"
@@ -84,7 +95,7 @@ const validateHospital = (): boolean => {
   if (!abbreviation) errorMessage.abbreviation = "กรุณากรอกชื่อย่อโรงพยาบาล"
 
   else if (hospitals.value.some((hospital) => hospital.id !== editHospitalId.value &&
-    hospital.abbreviation.trim().toLowerCase() === abbreviation.toLowerCase(),)) {
+    hospital.initial.trim().toLowerCase() === abbreviation.toLowerCase(),)) {
     errorMessage.abbreviation = 'ชื่อย่อโรงพยาบาลซ้ํา'
   }
   return !Object.values(errorMessage).some((message) => message !== '')
@@ -143,11 +154,11 @@ const deleteHospital = (id: string) => {
       <div class="flex flex-col gap-4 p-5 border-b border-slate-200 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h3 class="text-lg font-semibold text-slate-950">
-            Hospital List
+            รายการโรงพยาบาล
           </h3>
 
           <p class="mt-1 text-sm text-slate-500">
-            Manage hospitals and open each hospital workspace.
+            บริหารจัดการโรงพยาบาลทั้งหมดภายในบริษัท
           </p>
         </div>
 
@@ -186,11 +197,10 @@ const deleteHospital = (id: string) => {
         <table class="min-w-full text-sm text-left divide-y divide-slate-200">
           <thead class="text-xs font-semibold text-slate-500 uppercase bg-slate-50">
             <tr>
-              <th class="px-5 py-3">hospitalNameTh</th>
-              <th class="px-5 py-3">HospitatNameEn</th>
-              <th class="px-5 py-3">Abbreviation</th>
-              <th class="px-5 py-3">Status</th>
-              <th class="px-5 py-3 text-right">Actions</th>
+              <th class="px-5 py-3">ชื่อโรงพยาบาล</th>
+              <th class="px-5 py-3">ที่อยู่</th>
+              <th class="px-5 py-3">สถานะ</th>
+              <th class="px-5 py-3">Actions</th>
             </tr>
           </thead>
 
@@ -200,28 +210,25 @@ const deleteHospital = (id: string) => {
                 <p class="font-semibold text-slate-900">
                   {{ hospital.hospitalNameTh }}
                 </p>
+                <p class="text-sm text-slate-600">
+                  {{ hospital.hospitalNameEn }}
+                </p>
               </td>
-
               <td class="px-5 py-4 text-slate-600">
-                {{ hospital.hospitalNameEn }}
-              </td>
-
-              <td class="px-5 py-4 text-slate-600">
-                {{ hospital.address }}
+                {{ formatAddress(hospital) }}
               </td>
               <td class="px-5 py-4">
                 <span class="px-2 py-1 text-xs font-semibold rounded-md" :class="hospital.status === 'Active'
                   ? 'bg-emerald-50 text-emerald-700'
-                  : hospital.status === 'Maintenance'
-                    ? 'bg-amber-50 text-amber-700'
-                    : 'bg-slate-100 text-slate-600'
+                  : 'bg-slate-100 text-slate-600'
+
                   ">
                   {{ hospital.status }}
                 </span>
               </td>
 
               <td class="px-5 py-4">
-                <div class="flex justify-end gap-2">
+                <div class="flex gap-2">
                   <RouterLink :to="{
                     name: 'hospital-overview',
                     params: { id: hospital.id },

@@ -3,6 +3,7 @@ import type { Equipment } from "@/types/equipment";
 export const equipmentData: Equipment[] = [
     {
         id: "1",
+        hospitalId: '1',
         assetNumber: "6515-012-0001/1",
         equipmentId: "EKG-ER-01",
         equipmentName: "ECG render",
@@ -20,6 +21,7 @@ export const equipmentData: Equipment[] = [
     },
     {
         id: "2",
+        hospitalId: '1',
         assetNumber: "6515-012-0002/1",
         equipmentId: "WEA-ER-01",
         equipmentName: "Weight Scale Adult Digital",
@@ -37,6 +39,7 @@ export const equipmentData: Equipment[] = [
     },
     {
         id: "3",
+        hospitalId: '1',
         assetNumber: "6515-027-0001/1",
         equipmentId: "BPD-OPD-01",
         equipmentName: "Blood Pressure Digital",
@@ -54,6 +57,7 @@ export const equipmentData: Equipment[] = [
     },
     {
         id: "4",
+        hospitalId: '2',
         assetNumber: "6515-027-0002/1",
         equipmentId: "BPD-OPD-02",
         equipmentName: "Blood Pressure Digital",
@@ -71,6 +75,7 @@ export const equipmentData: Equipment[] = [
     },
     {
         id: "5",
+        hospitalId: '2',
         assetNumber: "6515-027-0001/1",
         equipmentId: "TMI-OPD-01",
         equipmentName: "Infrared Thermometer",

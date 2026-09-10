@@ -17,4 +17,20 @@ export const departmentData: Department[] = [
         createdAt: '2023-01-01',
         updatedAt: '2023-01-01',
     },
+    {
+        id: '3',
+        hospitalId : '2',
+        departmentName: 'ER',
+        departmentCode: 'แผนกอุบัติเหตุฉุกเฉิน',
+        createdAt: '2023-01-01',
+        updatedAt: '2023-01-01',
+    },
+    {
+        id: '4',
+        hospitalId : '2',
+        departmentName: 'OPD',
+        departmentCode: 'แผนกผู้ป่วยนอก',
+        createdAt: '2023-01-01',
+        updatedAt: '2023-01-01',
+    }
 ]

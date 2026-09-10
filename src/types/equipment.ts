@@ -1,5 +1,6 @@
 export interface Equipment {
     id: string
+    hospitalId: string
     assetNumber: string
     equipmentId : string
     equipmentName: string

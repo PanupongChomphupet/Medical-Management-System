@@ -1,6 +1,6 @@
-import type { WorkOrderEquipmentType } from '@/types/workorder'
+import type { WorkOrderEquipment } from '@/types/workorder'
 
-export const EquipOrderData: WorkOrderEquipmentType[] = [
+export const EquipOrderData: WorkOrderEquipment[] = [
     {
         id: '1',
         workOrderId: '1',

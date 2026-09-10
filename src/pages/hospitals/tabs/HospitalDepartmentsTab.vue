@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue'
+import { useRoute } from 'vue-router'
 import { departmentData } from '@/mock/departmentData'
 import type { Department, DepartmentForm } from '@/types/department'
 import BaseModal from '@/components/common/BaseModal.vue'
@@ -9,7 +10,9 @@ const createEmptyForm = (): DepartmentForm => ({
   departmentCode: '',
   departmentName: '',
 })
-const departments = ref<Department[]>(departmentData.map((item) => ({ ...item })))
+const hospitalId = String(useRoute().params.id)
+const hosptialDepartments = computed(() => departmentData.filter((item) => item.hospitalId === hospitalId))
+const departments = ref<Department[]>(hosptialDepartments.value.map((item) => ({ ...item })))
 const editDepartmentId = ref<string | null>(null)
 const searchTerm = ref('')
 const openModal = ref(false)
@@ -121,12 +124,27 @@ const deleteDepartment = (departmentId: string) => {
         </BaseModal>
         <BaseModal v-model="openDetailModal" title="Department Details">
           <dl v-if="selectedDepartment" class="grid gap-4 sm:grid-cols-2">
-            <div class="rounded-lg bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase text-slate-500">ชื่อแผนก</dt><dd class="mt-1 text-sm font-semibold text-slate-900">{{ selectedDepartment.departmentName }}</dd></div>
-            <div class="rounded-lg bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase text-slate-500">รายละเอียด</dt><dd class="mt-1 text-sm text-slate-900">{{ selectedDepartment.departmentCode || '-' }}</dd></div>
-            <div class="rounded-lg bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase text-slate-500">วันที่สร้าง</dt><dd class="mt-1 text-sm text-slate-900">{{ new Date(selectedDepartment.createdAt).toLocaleString('th-TH') }}</dd></div>
-            <div class="rounded-lg bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase text-slate-500">แก้ไขล่าสุด</dt><dd class="mt-1 text-sm text-slate-900">{{ new Date(selectedDepartment.updatedAt).toLocaleString('th-TH') }}</dd></div>
+            <div class="rounded-lg bg-slate-50 p-4">
+              <dt class="text-xs font-semibold uppercase text-slate-500">ชื่อแผนก</dt>
+              <dd class="mt-1 text-sm font-semibold text-slate-900">{{ selectedDepartment.departmentName }}</dd>
+            </div>
+            <div class="rounded-lg bg-slate-50 p-4">
+              <dt class="text-xs font-semibold uppercase text-slate-500">รายละเอียด</dt>
+              <dd class="mt-1 text-sm text-slate-900">{{ selectedDepartment.departmentCode || '-' }}</dd>
+            </div>
+            <div class="rounded-lg bg-slate-50 p-4">
+              <dt class="text-xs font-semibold uppercase text-slate-500">วันที่สร้าง</dt>
+              <dd class="mt-1 text-sm text-slate-900">{{ new Date(selectedDepartment.createdAt).toLocaleString('th-TH')
+                }}</dd>
+            </div>
+            <div class="rounded-lg bg-slate-50 p-4">
+              <dt class="text-xs font-semibold uppercase text-slate-500">แก้ไขล่าสุด</dt>
+              <dd class="mt-1 text-sm text-slate-900">{{ new Date(selectedDepartment.updatedAt).toLocaleString('th-TH')
+                }}</dd>
+            </div>
           </dl>
-          <template #footer><button type="button" class="px-4 py-2 text-white bg-teal-700 rounded-md hover:bg-teal-800" @click="openDetailModal = false">Close</button></template>
+          <template #footer><button type="button" class="px-4 py-2 text-white bg-teal-700 rounded-md hover:bg-teal-800"
+              @click="openDetailModal = false">Close</button></template>
         </BaseModal>
       </div>
     </div>

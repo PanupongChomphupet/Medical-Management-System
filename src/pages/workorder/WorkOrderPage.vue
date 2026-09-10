@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import BaseModal from '@/components/common/BaseModal.vue'
 import WorkOrderFormFields from '@/components/workorder/WorkorderFormFields.vue'
 import { hospitalData } from '@/mock/hospitalData'
-import { workOrder } from '@/mock/workorderData'
+import { workOrderData } from '@/mock/workorderData'
 import type { WorkOrder, WorkOrderForm } from '@/types/workorder'
 
 type WorkOrderStatus = WorkOrder['status']
@@ -18,7 +18,7 @@ const createEmptyForm = (): WorkOrderForm => ({
   remark: '',
 })
 
-const workOrders = ref<WorkOrder[]>(workOrder.map((item) => ({ ...item, })),)
+const workOrders = ref<WorkOrder[]>(workOrderData.map((item) => ({ ...item, })),)
 const searchTerm = ref('')
 const statusFilter = ref('')
 const modalOpen = ref(false)
@@ -87,14 +87,11 @@ const resetErrors = () => {
 }
 const openCreateModal = () => {
   editWorkOrderId.value = null
-
   Object.assign(
     workorderForm,
     createEmptyForm(),
   )
-
   resetErrors()
-
   modalOpen.value = true
 }
 

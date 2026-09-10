@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import BaseModal from '@/components/common/BaseModal.vue'
 import EquipmentFormFields from '@/components/hospital/EquipmentFormFields.vue'
 import { equipmentData } from '@/mock/EquipmentData'
@@ -19,7 +20,9 @@ const createEmptyForm = (): EquipmentForm => ({
   remark: '',
   status: 'Active'
 })
-const equipments = ref<Equipment[]>(equipmentData.map((item) => ({ ...item })))
+const hospitalId = String(useRoute().params.id)
+const hosptialEquipments = computed(() => equipmentData.filter((item) => item.hospitalId === hospitalId))
+const equipments = ref<Equipment[]>(hosptialEquipments.value.map((item) => ({ ...item })))
 const searchTerm = ref('')
 const openModal = ref(false)
 const openDetailModal = ref(false)
@@ -118,8 +121,7 @@ const deleteEquipment = (equipmentId: string) => {
           type="search" placeholder="Search equipment">
         <button type="button"
           class="h-10 px-4 text-sm font-semibold text-slate-700 border border-slate-300 rounded-md hover:bg-slate-50"
-          :class="showFilters ? 'border-teal-600 bg-teal-50 text-teal-700' : ''"
-          @click="showFilters = !showFilters">
+          :class="showFilters ? 'border-teal-600 bg-teal-50 text-teal-700' : ''" @click="showFilters = !showFilters">
           Filters<span v-if="activeFilterCount"> ({{ activeFilterCount }})</span>
         </button>
         <button type="button"
@@ -150,7 +152,8 @@ const deleteEquipment = (equipmentId: string) => {
               <dd class="mt-1 text-sm text-slate-900">{{ item[1] || '-' }}</dd>
             </div>
           </dl>
-          <template #footer><button type="button" class="px-4 py-2 text-white bg-teal-700 rounded-md hover:bg-teal-800" @click="openDetailModal = false">Close</button></template>
+          <template #footer><button type="button" class="px-4 py-2 text-white bg-teal-700 rounded-md hover:bg-teal-800"
+              @click="openDetailModal = false">Close</button></template>
         </BaseModal>
       </div>
     </div>
@@ -160,12 +163,16 @@ const deleteEquipment = (equipmentId: string) => {
         { key: 'riskLevel', label: 'Risk Level' }, { key: 'status', label: 'Status' },
       ]" :key="filter.key" class="text-sm font-medium text-slate-700">
         {{ filter.label }}
-        <select v-model="filters[filter.key as keyof typeof filters]" class="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
+        <select v-model="filters[filter.key as keyof typeof filters]"
+          class="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
           <option value="">ทั้งหมด</option>
-          <option v-for="option in uniqueOptions(filter.key as 'department' | 'workType' | 'riskLevel' | 'status')" :key="option" :value="option">{{ option }}</option>
+          <option v-for="option in uniqueOptions(filter.key as 'department' | 'workType' | 'riskLevel' | 'status')"
+            :key="option" :value="option">{{ option }}</option>
         </select>
       </label>
-      <div class="flex items-end"><button type="button" class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100" @click="clearFilters">Clear Filters</button></div>
+      <div class="flex items-end"><button type="button"
+          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+          @click="clearFilters">Clear Filters</button></div>
     </div>
     <div class="overflow-x-auto">
       <table class="min-w-full text-sm text-left divide-y divide-slate-200">

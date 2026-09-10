@@ -8,29 +8,28 @@ import type { HospitalForm } from '@/types/hospital.ts';
 
 defineProps<{ errors: { hospitalNameTh: string, abbreviation: string } }>()
 const statusOptions = [
-    { label: 'Active', value: 'active' },
-    { label: 'Inactive', value: 'inactive' },
+    { label: 'Active', value: 'Active' },
+    { label: 'Inactive', value: 'Inactive' },
 ]
 const model = defineModel<HospitalForm>({ required: true })
 
 </script>
 <template>
-    <div class="grid gap-4">
+    <section class="space-y-4">
         <div>
-            <BaseInput title="Hospital Name (TH)" v-model="model.hospitalNameTh" :error="errors.hospitalNameTh"
-                required />
-        </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+                <BaseInput title="Hospital Name (TH)" v-model="model.hospitalNameTh" :error="errors.hospitalNameTh"
+                    required />
+                <BaseInput title="Hospital Name (EN)" v-model="model.hospitalNameEn" />
+                <BaseInput title="Hospital Code" v-model="model.initial" :error="errors.abbreviation" />
+                <BaseInput title="ที่อยู่" v-model="model.address" />
+                <BaseInput title="ตำลบ" v-model="model.subdistrict" />
+                <BaseInput title="อำเภอ" v-model="model.district" />
+                <BaseInput title="จังหวัด" v-model="model.province" />
+                <BaseInput title="รหัสไปรษณีย์" v-model="model.postalCode" />
+                <BaseSelect title="สถานะ" v-model="model.status" :options="statusOptions" />
+            </div>
 
-        <div>
-            <BaseInput title="Hospital Name (EN)" v-model="model.hospitalNameEn" />
         </div>
-
-        <div>
-            <BaseInput title="Hospital Code" v-model="model.abbreviation" :error="errors.abbreviation" />
-        </div>
-
-        <div>
-            <BaseTextarea title="Address" v-model="model.address" />
-        </div>
-    </div>
-</template> 
+    </section>
+</template>

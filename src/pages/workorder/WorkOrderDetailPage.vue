@@ -5,20 +5,21 @@ import BaseModal from '@/components/common/BaseModal.vue'
 import { equipmentData } from '@/mock/EquipmentData'
 import { hospitalData } from '@/mock/hospitalData'
 import { departmentData } from '@/mock/departmentData'
-import { workOrder } from '@/mock/workorderData'
+import { workOrderData } from '@/mock/workorderData'
 import { EquipOrderData } from '@/mock/workOrderEquipmentData'
 import type { Equipment } from '@/types/equipment'
-import type { WorkOrderEquipmentType } from '@/types/workorder'
+import type { WorkOrderEquipment } from '@/types/workorder'
 
-type JobStatus = WorkOrderEquipmentType['status']
-type JobType = WorkOrderEquipmentType['jobType']
+type JobStatus = WorkOrderEquipment['status']
+type JobType = WorkOrderEquipment['jobType']
 type AddMode = 'single' | 'all'
-interface EquipmentRow extends WorkOrderEquipmentType { equipment: Equipment }
+interface EquipmentRow extends WorkOrderEquipment { equipment: Equipment }
 
-const workOrderId = String(useRoute().params.id)
-const workOrderData = computed(() => workOrder.find((item) => item.id === workOrderId))
-const hospitalName = computed(() => hospitalData.find((item) => item.id === workOrderData.value?.hospitalId)?.hospitalNameTh ?? workOrderData.value?.hospitalId ?? '-')
-const workOrderEquipments = ref<WorkOrderEquipmentType[]>(EquipOrderData.map((item) => ({ ...item })))
+const route = useRoute()
+const workOrderId = computed(() => route.params.id as string)
+const workOrder = computed(() => workOrderData.find((item) => item.id === workOrderId.value))
+const hospitalName = computed(() => hospitalData.find((item) => item.id === workOrder.value?.hospitalId)?.hospitalNameTh ?? workOrder.value?.hospitalId ?? '-')
+const workOrderEquipments = ref<WorkOrderEquipment[]>(EquipOrderData.map((item) => ({ ...item })))
 const searchTerm = ref('')
 const showFilters = ref(false)
 const addModalOpen = ref(false)
@@ -28,11 +29,12 @@ const addForm = reactive<{ mode: AddMode; equipmentId: string; jobType: JobType;
 const statuses: JobStatus[] = ['Pending', 'In Progress', 'Completed']
 const jobTypes: JobType[] = ['CAL', 'PM', 'CAL/PM']
 
-const relationsForThisWorkOrder = computed(() => workOrderEquipments.value.filter((item) => item.workOrderId === workOrderId))
+const relationsForThisWorkOrder = computed(() => workOrderEquipments.value.filter((item) => item.workOrderId === workOrderId.value))
 const equipmentRows = computed<EquipmentRow[]>(() => relationsForThisWorkOrder.value.flatMap((relation) => {
     const equipment = equipmentData.find((item) => item.id === relation.equipmentId)
     return equipment ? [{ ...relation, equipment }] : []
 }))
+
 const totalCount = computed(() => equipmentRows.value.length)
 const completedCount = computed(() => equipmentRows.value.filter((item) => item.status === 'Completed').length)
 const remainingCount = computed(() => totalCount.value - completedCount.value)
@@ -62,8 +64,8 @@ const openAddModal = () => {
     addModalOpen.value = true
 }
 const closeAddModal = () => { addModalOpen.value = false; addError.value = '' }
-const createRelation = (equipment: Equipment): WorkOrderEquipmentType => ({
-    id: crypto.randomUUID(), workOrderId, equipmentId: equipment.id,
+const createRelation = (equipment: Equipment): WorkOrderEquipment => ({
+    id: crypto.randomUUID(), workOrderId: workOrderId.value, equipmentId: equipment.id,
     jobType: addForm.jobType, status: addForm.status,
 })
 const addEquipment = () => {
@@ -91,27 +93,26 @@ const removeEquipment = (id: string) => workOrderEquipments.value = workOrderEqu
                         class="my-2 text-sm font-semibold text-teal-600 transition hover:text-teal-900">
                         Black to WorkOrder
                     </RouterLink>
-                    <h1 class="text-xl font-semibold text-slate-950">{{ workOrderData?.workOrderId ??
+                    <h1 class="text-xl font-semibold text-slate-950">{{ workOrder?.workOrderId ??
                         'Work Order notfound' }}</h1>
                     <h2 class="mt-3 text-lg font-semibold text-slate-900">{{ hospitalName }}</h2>
-                    <p class="mt-1 text-sm text-slate-500">{{ workOrderData?.startDate ?? '-' }} - {{
-                        workOrderData?.endDate ?? '-' }}</p>
+                    <p class="mt-1 text-sm text-slate-500">{{ workOrder?.startDate ?? '-' }} - {{
+                        workOrder?.endDate ?? '-' }}</p>
                 </div>
                 <span class="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{{
-                    workOrderData?.status ?? '-' }}</span>
+                    workOrder?.status ?? '-' }}</span>
             </div>
             <div class="grid gap-6 p-5 md:grid-cols-2">
                 <div>
                     <p class="text-sm font-semibold text-slate-700">Assigned Staff</p>
-                    <div class="mt-2 flex flex-wrap gap-2"><span v-for="staff in workOrderData?.staffIds ?? []"
-                            :key="staff"
+                    <div class="mt-2 flex flex-wrap gap-2"><span v-for="staff in workOrder?.staffIds ?? []" :key="staff"
                             class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">{{ staff
-                            }}</span><span v-if="!workOrderData?.staffIds.length"
-                            class="text-sm text-slate-400">-</span></div>
+                            }}</span><span v-if="!workOrder?.staffIds.length" class="text-sm text-slate-400">-</span>
+                    </div>
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-slate-700">Remark</p>
-                    <p class="mt-2 text-sm text-slate-500">{{ workOrderData?.remark || '-' }}</p>
+                    <p class="mt-2 text-sm text-slate-500">{{ workOrder?.remark || '-' }}</p>
                 </div>
             </div>
         </section>
