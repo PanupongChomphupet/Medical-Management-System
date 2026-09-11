@@ -295,9 +295,6 @@ const deleteWorkOrder = (id: string) => {
     </div>
 
     <BaseModal v-model="modalOpen" :title="editWorkOrderId ? 'Edit Work Order' : 'Create Work Order'">
-      <p v-if="!editWorkOrderId" class="mb-4 rounded-md bg-teal-50 px-3 py-2 text-sm text-teal-700">
-        Work ID จะถูกสร้างให้อัตโนมัติเมื่อบันทึก
-      </p>
       <WorkOrderFormFields v-model="workorderForm" :errors="errors" />
       <template #footer><button type="button"
           class="rounded-md border border-slate-300 px-4 py-2 text-slate-600 hover:bg-slate-50"
