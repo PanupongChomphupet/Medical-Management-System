@@ -59,7 +59,7 @@ export const equipmentData: Equipment[] = [
         id: "4",
         hospitalId: '2',
         assetNumber: "6515-027-0002/1",
-        equipmentId: "BPD-OPD-02",
+        equipmentId: "BPD-OPD-01",
         equipmentName: "Blood Pressure Digital",
         manufacturer: "OMRON",
         model: "HEM-907",

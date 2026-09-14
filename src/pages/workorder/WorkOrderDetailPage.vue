@@ -30,6 +30,7 @@ const statuses: JobStatus[] = ['Pending', 'In Progress', 'Completed']
 const jobTypes: JobType[] = ['CAL', 'PM', 'CAL/PM']
 
 const relationsForThisWorkOrder = computed(() => workOrderEquipments.value.filter((item) => item.workOrderId === workOrderId.value))
+console.log(relationsForThisWorkOrder.value)
 const equipmentRows = computed<EquipmentRow[]>(() => relationsForThisWorkOrder.value.flatMap((relation) => {
     const equipment = equipmentData.find((item) => item.id === relation.equipmentId)
     return equipment ? [{ ...relation, equipment }] : []
@@ -39,9 +40,17 @@ const totalCount = computed(() => equipmentRows.value.length)
 const completedCount = computed(() => equipmentRows.value.filter((item) => item.status === 'Completed').length)
 const remainingCount = computed(() => totalCount.value - completedCount.value)
 const activeFilterCount = computed(() => Object.values(filters).filter(Boolean).length)
-const availableEquipments = computed(() => equipmentData.filter((equipment) =>
-    !relationsForThisWorkOrder.value.some((item) => item.equipmentId === equipment.id),
-))
+const availableEquipments = computed(() => {
+    if (!workOrder.value) return []
+
+    return equipmentData.filter((equipment) => {
+        const isSameHospital = equipment.hospitalId === workOrder.value?.hospitalId
+
+        const isNotAdded = !relationsForThisWorkOrder.value.some((item) => item.equipmentId === equipment.id)
+
+        return isSameHospital && isNotAdded
+    })
+})
 const departmentName = (id: string) => departmentData.find((item) => item.id === id)?.departmentName ?? id
 const uniqueValues = (field: 'department' | 'jobType') => field === 'department'
     ? [...new Set(equipmentRows.value.map((item) => item.equipment.department).filter(Boolean))]
@@ -143,7 +152,7 @@ const removeEquipment = (id: string) => workOrderEquipments.value = workOrderEqu
                         class="h-10 rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                         :class="showFilters ? 'border-teal-600 bg-teal-50 text-teal-700' : ''"
                         @click="showFilters = !showFilters">Filter<span v-if="activeFilterCount"> ({{ activeFilterCount
-                            }})</span></button><button type="button"
+                        }})</span></button><button type="button"
                         class="h-10 whitespace-nowrap rounded-md bg-teal-700 px-4 text-sm font-semibold text-white hover:bg-teal-800"
                         @click="openAddModal">Add Equipment</button></div>
             </header>
@@ -222,7 +231,7 @@ const removeEquipment = (id: string) => workOrderEquipments.value = workOrderEqu
                         <option v-for="equipment in availableEquipments" :key="equipment.id" :value="equipment.id">{{
                             equipment.equipmentId }} — {{ equipment.equipmentName }}</option>
                     </select><span v-if="addError" class="mt-1 block text-sm text-rose-500">{{ addError
-                        }}</span></label>
+                    }}</span></label>
                 <p v-else class="rounded-md bg-teal-50 p-3 text-sm text-teal-700">
                     จะเพิ่มเครื่องมือที่ยังไม่อยู่ในรอบงานนี้จำนวน {{ availableEquipments.length }} เครื่อง</p>
                 <label class="text-sm font-medium">Job Type<select v-model="addForm.jobType"

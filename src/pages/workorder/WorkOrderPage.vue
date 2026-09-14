@@ -65,7 +65,7 @@ const filteredWorkOrders = computed(() => {
 const hospitalName = (id: string) => {
   return (
     hospitalData.find((hospital) => hospital.id === id)
-      ?.hospitalNameEn ?? id
+      ?.hospitalNameTh ?? id
   )
 }
 const formatDate = (date: string) => {
