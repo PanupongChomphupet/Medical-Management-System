@@ -26,9 +26,8 @@ const addError = ref('')
 const addSearchTerm = ref('')
 const addDepartmentFilter = ref('')
 const filters = reactive({ department: '', jobType: '', status: '' })
-const addForm = reactive<{ equipmentIds: string[]; jobType: JobType }>({ equipmentIds: [], jobType: 'CAL' })
+const addForm = reactive({ equipmentIds: [] as string[] })
 const statuses: JobStatus[] = ['Pending', 'In Progress', 'Completed']
-const jobTypes: JobType[] = ['CAL', 'PM', 'CAL/PM']
 
 const ordersEquip = computed(() => workOrderEquipments.value.filter((item) => item.workOrderId === workOrderId.value))
 const equipmentRows = computed<EquipmentRow[]>(() => ordersEquip.value.flatMap((relation) => {
@@ -90,7 +89,7 @@ const filteredEquipments = computed(() => {
 const statusClass = (status: JobStatus) => ({ Pending: 'bg-amber-100 text-amber-700', 'In Progress': 'bg-blue-100 text-blue-700', Completed: 'bg-emerald-100 text-emerald-700' }[status])
 const clearFilters = () => Object.assign(filters, { department: '', jobType: '', status: '' })
 const openAddModal = () => {
-    Object.assign(addForm, { equipmentIds: [], jobType: 'CAL' })
+    Object.assign(addForm, { equipmentIds: [], })
     addSearchTerm.value = ''
     addDepartmentFilter.value = ''
     addError.value = ''
@@ -99,7 +98,7 @@ const openAddModal = () => {
 const closeAddModal = () => { addModalOpen.value = false; addError.value = '' }
 const createRelation = (equipment: Equipment): WorkOrderEquipment => ({
     id: crypto.randomUUID(), workOrderId: workOrderId.value, equipmentId: equipment.id,
-    jobType: addForm.jobType, status: 'Pending',
+    jobType: equipment.workType, status: 'Pending',
 })
 const addEquipment = () => {
     addError.value = ''
@@ -279,7 +278,7 @@ const removeEquipment = (id: string) => workOrderEquipments.value = workOrderEqu
                             <p v-if="filteredAvailableEquipments.length === 0"
                                 class="p-4 text-center text-sm text-slate-500">
                                 {{ availableEquipments.length === 0 ? 'ไม่มีเครื่องมือที่สามารถเพิ่มได้' :
-                                'ไม่พบเครื่องมือตามคำค้นหาและตัวกรอง' }}</p>
+                                    'ไม่พบเครื่องมือตามคำค้นหาและตัวกรอง' }}</p>
                         </div>
                     </div>
                     <p v-if="addError" class="mt-1 text-sm text-rose-500">{{ addError }}</p>

@@ -8,7 +8,7 @@ export interface Equipment {
     model: string
     serialNumber: string
     department: string
-    workType: string
+    workType: 'CAL' | 'PM' | 'CAL-PM'
     riskLevel: string
     registeredBy : string
     remark: string

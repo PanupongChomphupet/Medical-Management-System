@@ -24,6 +24,6 @@ export interface WorkOrderEquipment {
     id: string
     workOrderId: string
     equipmentId: string
-    jobType: 'CAL' | 'PM' | 'CAL/PM'
+    jobType: 'CAL' | 'PM' | 'CAL-PM'
     status: 'Pending' | 'In Progress' | 'Completed'
 }
